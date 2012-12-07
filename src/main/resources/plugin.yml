@@ -1,0 +1,20 @@
+author: eccentric_nz
+description: Switch a player's GameMode at a preset time
+main: me.eccentric_nz.plugins.gamemodetimer.GameModeTimer
+name: GameModeTimer
+startup: postworld
+version: '1.0-beta'
+dev-url: http://dev.bukkit.org/server-mods/gamemodetimer/
+softdepend: [MultiVerse-Core]
+permissions:
+  gamemodetimer.admin:
+    description: Allow player to change GameModeTimer settings
+    default: op
+  gamemodetimer.bypass:
+    description: Allow player to bypass the timed GameMode swtich
+    default: false
+commands:
+  gmt:
+    description: Used to change GameModeTimer settings
+    permissions: gamemodetimer.admin
+    usage: /<command> [toggle|time|gamemode] [world] [setting] e.g. /gmt toggle zombienightmare true

@@ -1,0 +1,6 @@
+# 0 is dawn/day, 6000 midday, 12000 dusk, 18000 midnight, 12500 night
+worlds:
+  test:
+    enabled: true
+    gamemode: ADVENTURE
+    time: 12500
