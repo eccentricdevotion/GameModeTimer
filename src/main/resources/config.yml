@@ -7,3 +7,5 @@ worlds:
     players: 20
     set_morning: true
     keep_night: true
+    no_build: false
+    keep_leaderboard: false

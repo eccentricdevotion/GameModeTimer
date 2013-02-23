@@ -1,6 +1,7 @@
 package me.eccentric_nz.plugins.gamemodetimer;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.Set;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -21,6 +22,16 @@ public class GameModeTimerCommands implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
         if (cmd.getName().equalsIgnoreCase("gmt")) {
+            if (args[0].equalsIgnoreCase("leaderboard")) {
+                sender.sendMessage(plugin.MY_PLUGIN_NAME + "Leaderboard Top 5");
+                int i = 1;
+                for (Map.Entry<Long, String> entry : plugin.gmtLeaderboard.descendingMap().entrySet()) {
+                    if (i++ < 6) {
+                        sender.sendMessage(i + ". " + entry.getKey() + " : " + entry.getValue());
+                    }
+                }
+                return true;
+            }
             if (!sender.hasPermission("gamemodetimer.admin")) {
                 sender.sendMessage(plugin.MY_PLUGIN_NAME + "You do not have permission to use this command!");
                 return true;
@@ -74,21 +85,13 @@ public class GameModeTimerCommands implements CommandExecutor {
                 }
                 plugin.getConfig().set("worlds." + args[1] + ".players", num);
             }
-            if (args[0].equalsIgnoreCase("set_morning")) {
+            if (args[0].equalsIgnoreCase("set_morning") || args[0].equalsIgnoreCase("keep_night") || args[0].equalsIgnoreCase("no_build") || args[0].equalsIgnoreCase("keep_leaderboard")) {
                 String tf = args[2].toLowerCase();
                 if (!tf.equals("true") && !tf.equals("false")) {
                     sender.sendMessage(plugin.MY_PLUGIN_NAME + ChatColor.RED + "The last argument must be true or false!");
                     return false;
                 }
-                plugin.getConfig().set("worlds." + args[1] + ".set_morning", Boolean.valueOf(tf));
-            }
-            if (args[0].equalsIgnoreCase("keep_night")) {
-                String tf = args[2].toLowerCase();
-                if (!tf.equals("true") && !tf.equals("false")) {
-                    sender.sendMessage(plugin.MY_PLUGIN_NAME + ChatColor.RED + "The last argument must be true or false!");
-                    return false;
-                }
-                plugin.getConfig().set("worlds." + args[1] + ".keep_night", Boolean.valueOf(tf));
+                plugin.getConfig().set("worlds." + args[1] + "." + args[0].toLowerCase(), Boolean.valueOf(tf));
             }
             plugin.saveConfig();
             sender.sendMessage(plugin.MY_PLUGIN_NAME + "Config updated successfully");

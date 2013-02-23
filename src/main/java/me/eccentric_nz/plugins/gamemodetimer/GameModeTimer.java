@@ -1,9 +1,17 @@
 package me.eccentric_nz.plugins.gamemodetimer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -23,12 +31,15 @@ public class GameModeTimer extends JavaPlugin implements Listener {
     private GameModeTimerCommands commando;
     public HashMap<String, String> gmtAfterlife = new HashMap<String, String>();
     public HashMap<String, Integer> gmtPlayerLimits = new HashMap<String, Integer>();
+    public HashMap<String, Long> gmtLastManStandingStart = new HashMap<String, Long>();
+    public TreeMap<Long, String> gmtLeaderboard = new TreeMap<Long, String>();
     public List<String> gmtLimitReached = new ArrayList<String>();
     public List<String> gmtHasSwitched = new ArrayList<String>();
 
     @Override
     public void onDisable() {
-        // TODO: Place any custom disable code here.
+        // save the leaderboard
+        saveLeaderboard();
     }
 
     @Override
@@ -45,6 +56,7 @@ public class GameModeTimer extends JavaPlugin implements Listener {
                 commando = new GameModeTimerCommands(plugin);
                 getCommand("gmt").setExecutor(commando);
                 gmtTimeKeeper = new GameModeTimerKeepNight(plugin);
+                loadLeaderboard();
             }
         }, 10L);
 
@@ -69,6 +81,7 @@ public class GameModeTimer extends JavaPlugin implements Listener {
             if (now >= time) {
                 if (!gmtHasSwitched.contains(w.getName())) {
                     gmtHasSwitched.add(w.getName());
+                    gmtLastManStandingStart.put(w.getName(), now);
                 }
                 // get players in this world
                 List<Player> players = w.getPlayers();
@@ -117,5 +130,45 @@ public class GameModeTimer extends JavaPlugin implements Listener {
             }
         }
         return list;
+    }
+
+    private void loadLeaderboard() {
+        File file = new File(getDataFolder() + File.separator + "leaderboard.txt");
+        if (file.exists()) {
+            try {
+                BufferedReader br = new BufferedReader(new FileReader(file));
+                String line;
+                while ((line = br.readLine()) != null) {
+                    String[] split = line.split(":");
+                    Long time = 0L;
+                    try {
+                        time = Long.parseLong(split[0]);
+                    } catch (NumberFormatException nfe) {
+                    }
+                    gmtLeaderboard.put(time, split[1]);
+                }
+                br.close();
+                getServer().getConsoleSender().sendMessage(MY_PLUGIN_NAME + "Loading chunks from chunks.txt!");
+            } catch (IOException e) {
+                getServer().getConsoleSender().sendMessage(MY_PLUGIN_NAME + "Could not create and write to chunks.txt! " + e.getMessage());
+            }
+        }
+    }
+
+    private void saveLeaderboard() {
+        if (gmtLeaderboard.size() > 0) {
+            String file = getDataFolder() + File.separator + "leaderboard.txt";
+            try {
+                BufferedWriter bw = new BufferedWriter(new FileWriter(file, false));
+                for (Map.Entry<Long, String> entry : gmtLeaderboard.entrySet()) {
+                    String line = entry.getKey() + ":" + entry.getValue();
+                    bw.write(line);
+                    bw.newLine();
+                }
+                bw.close();
+            } catch (IOException e) {
+                getServer().getConsoleSender().sendMessage(MY_PLUGIN_NAME + "Could not create and write to leaderboard.txt! " + e.getMessage());
+            }
+        }
     }
 }

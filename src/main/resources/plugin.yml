@@ -17,4 +17,4 @@ commands:
   gmt:
     description: Used to change GameModeTimer settings
     permissions: gamemodetimer.admin
-    usage: /<command> [toggle|time|gamemode|players|set_morning|keep_night] [world] [setting] e.g. /gmt toggle zombienightmare true
+    usage: /<command> [toggle|time|gamemode|players|set_morning|keep_night|no_build|keep_leaderboard] [world] [setting] e.g. /gmt toggle zombienightmare true

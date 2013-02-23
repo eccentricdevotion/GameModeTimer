@@ -34,6 +34,12 @@ public class GameModeTimerListener implements Listener {
                 if (num == 0 && plugin.gmtHasSwitched.contains(fromw)) {
                     plugin.gmtHasSwitched.remove(fromw);
                     plugin.gmtLimitReached.remove(fromw);
+                    if (plugin.getConfig().getBoolean("worlds." + fromw + ".keep_leaderboard")) {
+                        Long now = event.getFrom().getTime();
+                        Long time = now - plugin.gmtLastManStandingStart.get(fromw);
+                        // write time to leaderboard
+                        plugin.gmtLeaderboard.put(time, p.getName());
+                    }
                 }
             }
         }
@@ -50,7 +56,7 @@ public class GameModeTimerListener implements Listener {
                 num = plugin.gmtPlayerLimits.get(tow);
             }
             //p.sendMessage("Player count in this world is: " + num);
-            if (num < limit && !plugin.gmtLimitReached.contains(tow)) {
+            if (num < limit && !plugin.gmtLimitReached.contains(tow) && !plugin.gmtHasSwitched.contains(tow)) {
                 if (num == 0 && plugin.getConfig().getBoolean("worlds." + tow + ".set_morning")) {
                     //first player in world set time to 0
                     event.getTo().getWorld().setTime(0);
@@ -63,7 +69,11 @@ public class GameModeTimerListener implements Listener {
                 p.sendMessage(plugin.MY_PLUGIN_NAME + "Welcome to " + tow + ". Your game mode will be switched to " + plugin.getConfig().getString("worlds." + tow + ".gamemode") + " at " + plugin.getConfig().getString("worlds." + tow + ".time") + ". We suggest you get busy!");
             } else {
                 event.setCancelled(true);
-                p.sendMessage(plugin.MY_PLUGIN_NAME + "We're sorry but " + tow + " has reached the maximum number of players!");
+                if (plugin.gmtHasSwitched.contains(tow)) {
+                    p.sendMessage(plugin.MY_PLUGIN_NAME + "We're sorry but " + tow + " has has already switched game modes, try joining again later!");
+                } else {
+                    p.sendMessage(plugin.MY_PLUGIN_NAME + "We're sorry but " + tow + " has reached the maximum number of players!");
+                }
             }
         }
     }
