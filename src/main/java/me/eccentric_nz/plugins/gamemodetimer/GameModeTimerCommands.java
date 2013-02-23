@@ -23,12 +23,16 @@ public class GameModeTimerCommands implements CommandExecutor {
 
         if (cmd.getName().equalsIgnoreCase("gmt")) {
             if (args[0].equalsIgnoreCase("leaderboard")) {
-                sender.sendMessage(plugin.MY_PLUGIN_NAME + "Leaderboard Top 5");
-                int i = 1;
-                for (Map.Entry<Long, String> entry : plugin.gmtLeaderboard.descendingMap().entrySet()) {
-                    if (i++ < 6) {
-                        sender.sendMessage(i + ". " + entry.getKey() + " : " + entry.getValue());
+                if (plugin.gmtLeaderboard.size() > 0) {
+                    sender.sendMessage(plugin.MY_PLUGIN_NAME + "Leaderboard Top 5");
+                    int i = 0;
+                    for (Map.Entry<Long, String> entry : plugin.gmtLeaderboard.descendingMap().entrySet()) {
+                        if (i++ < 6) {
+                            sender.sendMessage(i + ". " + entry.getKey() + " : " + entry.getValue());
+                        }
                     }
+                } else {
+                    sender.sendMessage(plugin.MY_PLUGIN_NAME + "There are no Leaderboard stats yet");
                 }
                 return true;
             }

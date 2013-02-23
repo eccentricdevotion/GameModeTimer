@@ -13,9 +13,9 @@ public class GameModeTimerKeepNight {
     public void timechk() {
         for (World w : plugin.gmtWorlds) {
             if (plugin.getConfig().getBoolean("worlds." + w.getName() + ".keep_night")
-                    && plugin.gmtPlayerLimits.containsKey(w.getName())
+                    && plugin.gmtPlayerCount.containsKey(w.getName())
                     && plugin.gmtHasSwitched.contains(w.getName())) {
-                if (plugin.gmtPlayerLimits.get(w.getName()) > 0) {
+                if (plugin.gmtPlayerCount.get(w.getName()) > 0) {
                     Long now = w.getTime();
                     Long dusk = 21500L;
                     Long dawn = plugin.getConfig().getLong("worlds." + w.getName() + ".time") + 1000;

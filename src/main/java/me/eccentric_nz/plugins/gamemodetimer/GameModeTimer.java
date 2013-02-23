@@ -30,10 +30,9 @@ public class GameModeTimer extends JavaPlugin implements Listener {
     GameModeTimerKeepNight gmtTimeKeeper;
     private GameModeTimerCommands commando;
     public HashMap<String, String> gmtAfterlife = new HashMap<String, String>();
-    public HashMap<String, Integer> gmtPlayerLimits = new HashMap<String, Integer>();
+    public HashMap<String, Integer> gmtPlayerCount = new HashMap<String, Integer>();
     public HashMap<String, Long> gmtLastManStandingStart = new HashMap<String, Long>();
     public TreeMap<Long, String> gmtLeaderboard = new TreeMap<Long, String>();
-    public List<String> gmtLimitReached = new ArrayList<String>();
     public List<String> gmtHasSwitched = new ArrayList<String>();
 
     @Override
@@ -75,20 +74,24 @@ public class GameModeTimer extends JavaPlugin implements Listener {
 
     private void timer() {
         for (World w : gmtWorlds) {
-            Long now = w.getTime();
-            Long time = getConfig().getLong("worlds." + w.getName() + ".time");
-            GameMode change = GameMode.valueOf(getConfig().getString("worlds." + w.getName() + ".gamemode"));
-            if (now >= time) {
-                if (!gmtHasSwitched.contains(w.getName())) {
-                    gmtHasSwitched.add(w.getName());
-                    gmtLastManStandingStart.put(w.getName(), now);
-                }
-                // get players in this world
-                List<Player> players = w.getPlayers();
-                for (Player p : players) {
-                    GameMode gm = p.getGameMode();
-                    if (!gm.equals(change) && !p.hasPermission("gamemodetimer.bypass") && p.isOnline()) {
-                        p.setGameMode(change);
+            String name = w.getName();
+            // only switch if there are players in the world
+            if (gmtPlayerCount.containsKey(name)) {
+                Long now = w.getTime();
+                Long time = getConfig().getLong("worlds." + w.getName() + ".time");
+                GameMode change = GameMode.valueOf(getConfig().getString("worlds." + w.getName() + ".gamemode"));
+                if (now >= time) {
+                    if (!gmtHasSwitched.contains(name)) {
+                        gmtHasSwitched.add(name);
+                        gmtLastManStandingStart.put(name, now);
+                    }
+                    // get players in this world
+                    List<Player> players = w.getPlayers();
+                    for (Player p : players) {
+                        GameMode gm = p.getGameMode();
+                        if (!gm.equals(change) && !p.hasPermission("gamemodetimer.bypass") && p.isOnline()) {
+                            p.setGameMode(change);
+                        }
                     }
                 }
             }
@@ -105,7 +108,10 @@ public class GameModeTimer extends JavaPlugin implements Listener {
                 getConfig().set(worldname + ".gamemode", "ADVENTURE");
                 getConfig().set(worldname + ".time", 12500);
                 getConfig().set(worldname + ".players", 20);
+                getConfig().set(worldname + ".set_morning", true);
                 getConfig().set(worldname + ".keep_night", true);
+                getConfig().set(worldname + ".no_build", false);
+                getConfig().set(worldname + ".keep_leaderboard", false);
                 System.out.println(MY_PLUGIN_NAME + " Added '" + w.getName() + "' to config.");
             }
         }
