@@ -4,3 +4,6 @@ worlds:
     enabled: true
     gamemode: ADVENTURE
     time: 12500
+    players: 20
+    set_morning: true
+    keep_night: true

@@ -14,13 +14,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class GameModeTimer extends JavaPlugin implements Listener {
 
-    protected static GameModeTimer plugin;
+    protected GameModeTimer plugin;
     public List<World> gmtWorlds;
     public String MY_PLUGIN_NAME;
     PluginManager pm = Bukkit.getServer().getPluginManager();
     GameModeTimerListener gmtListener;
+    GameModeTimerKeepNight gmtTimeKeeper;
     private GameModeTimerCommands commando;
     public HashMap<String, String> gmtAfterlife = new HashMap<String, String>();
+    public HashMap<String, Integer> gmtPlayerLimits = new HashMap<String, Integer>();
+    public List<String> gmtLimitReached = new ArrayList<String>();
+    public List<String> gmtHasSwitched = new ArrayList<String>();
 
     @Override
     public void onDisable() {
@@ -40,6 +44,7 @@ public class GameModeTimer extends JavaPlugin implements Listener {
                 pm.registerEvents(gmtListener, plugin);
                 commando = new GameModeTimerCommands(plugin);
                 getCommand("gmt").setExecutor(commando);
+                gmtTimeKeeper = new GameModeTimerKeepNight(plugin);
             }
         }, 10L);
 
@@ -48,6 +53,12 @@ public class GameModeTimer extends JavaPlugin implements Listener {
                 timer();
             }
         }, 20L, 10L);
+
+        getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+            public void run() {
+                gmtTimeKeeper.timechk();
+            }
+        }, 60L, 600L);
     }
 
     private void timer() {
@@ -56,6 +67,9 @@ public class GameModeTimer extends JavaPlugin implements Listener {
             Long time = getConfig().getLong("worlds." + w.getName() + ".time");
             GameMode change = GameMode.valueOf(getConfig().getString("worlds." + w.getName() + ".gamemode"));
             if (now >= time) {
+                if (!gmtHasSwitched.contains(w.getName())) {
+                    gmtHasSwitched.add(w.getName());
+                }
                 // get players in this world
                 List<Player> players = w.getPlayers();
                 for (Player p : players) {
@@ -77,6 +91,8 @@ public class GameModeTimer extends JavaPlugin implements Listener {
                 getConfig().set(worldname + ".enabled", false);
                 getConfig().set(worldname + ".gamemode", "ADVENTURE");
                 getConfig().set(worldname + ".time", 12500);
+                getConfig().set(worldname + ".players", 20);
+                getConfig().set(worldname + ".keep_night", true);
                 System.out.println(MY_PLUGIN_NAME + " Added '" + w.getName() + "' to config.");
             }
         }

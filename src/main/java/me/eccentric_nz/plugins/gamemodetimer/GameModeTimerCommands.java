@@ -64,6 +64,32 @@ public class GameModeTimerCommands implements CommandExecutor {
                 }
                 plugin.getConfig().set("worlds." + args[1] + ".gamemode", GameMode.valueOf(args[2]).toString());
             }
+            if (args[0].equalsIgnoreCase("players")) {
+                int num;
+                try {
+                    num = Integer.parseInt(args[2]);
+                } catch (NumberFormatException nfe) {
+                    sender.sendMessage(plugin.MY_PLUGIN_NAME + ChatColor.RED + "The last argument must be a number!");
+                    return false;
+                }
+                plugin.getConfig().set("worlds." + args[1] + ".players", num);
+            }
+            if (args[0].equalsIgnoreCase("set_morning")) {
+                String tf = args[2].toLowerCase();
+                if (!tf.equals("true") && !tf.equals("false")) {
+                    sender.sendMessage(plugin.MY_PLUGIN_NAME + ChatColor.RED + "The last argument must be true or false!");
+                    return false;
+                }
+                plugin.getConfig().set("worlds." + args[1] + ".set_morning", Boolean.valueOf(tf));
+            }
+            if (args[0].equalsIgnoreCase("keep_night")) {
+                String tf = args[2].toLowerCase();
+                if (!tf.equals("true") && !tf.equals("false")) {
+                    sender.sendMessage(plugin.MY_PLUGIN_NAME + ChatColor.RED + "The last argument must be true or false!");
+                    return false;
+                }
+                plugin.getConfig().set("worlds." + args[1] + ".keep_night", Boolean.valueOf(tf));
+            }
             plugin.saveConfig();
             sender.sendMessage(plugin.MY_PLUGIN_NAME + "Config updated successfully");
             return true;

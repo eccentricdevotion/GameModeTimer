@@ -3,9 +3,9 @@ description: Switch a player's GameMode at a preset time
 main: me.eccentric_nz.plugins.gamemodetimer.GameModeTimer
 name: GameModeTimer
 startup: postworld
-version: '1.0-beta'
+version: '1.0-beta-3'
 dev-url: http://dev.bukkit.org/server-mods/gamemodetimer/
-softdepend: [MultiVerse-Core]
+soft-depend: [MultiVerse-Core]
 permissions:
   gamemodetimer.admin:
     description: Allow player to change GameModeTimer settings
@@ -17,4 +17,4 @@ commands:
   gmt:
     description: Used to change GameModeTimer settings
     permissions: gamemodetimer.admin
-    usage: /<command> [toggle|time|gamemode] [world] [setting] e.g. /gmt toggle zombienightmare true
+    usage: /<command> [toggle|time|gamemode|players|set_morning|keep_night] [world] [setting] e.g. /gmt toggle zombienightmare true
