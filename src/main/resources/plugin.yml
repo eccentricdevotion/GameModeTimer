@@ -3,7 +3,7 @@ description: Switch a player's GameMode at a preset time
 main: me.eccentric_nz.plugins.gamemodetimer.GameModeTimer
 name: GameModeTimer
 startup: postworld
-version: '1.0-beta-3'
+version: '1.0-beta-4'
 dev-url: http://dev.bukkit.org/server-mods/gamemodetimer/
 soft-depend: [MultiVerse-Core]
 permissions:
