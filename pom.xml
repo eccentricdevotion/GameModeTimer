@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>me.eccentric_nz.plugins.gamemodetimer</groupId>
     <artifactId>GameModeTimer</artifactId>
-    <version>1.0-beta-4</version>
+    <version>1.0-beta-3</version>
     <name>GameModeTimer</name>
     <repositories>
         <repository>
@@ -27,7 +27,7 @@
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
-            <version>1.5-R0.1-SNAPSHOT</version>
+            <version>LATEST</version>
             <type>jar</type>
             <scope>compile</scope>
         </dependency>

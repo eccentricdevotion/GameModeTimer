@@ -12,7 +12,7 @@ import org.bukkit.command.CommandSender;
 
 public class GameModeTimerCommands implements CommandExecutor {
 
-    private GameModeTimer plugin;
+    private final GameModeTimer plugin;
 
     public GameModeTimerCommands(GameModeTimer plugin) {
         this.plugin = plugin;

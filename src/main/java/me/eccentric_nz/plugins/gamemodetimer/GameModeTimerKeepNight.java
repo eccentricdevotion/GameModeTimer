@@ -4,7 +4,7 @@ import org.bukkit.World;
 
 public class GameModeTimerKeepNight {
 
-    private GameModeTimer plugin;
+    private final GameModeTimer plugin;
 
     public GameModeTimerKeepNight(GameModeTimer plugin) {
         this.plugin = plugin;

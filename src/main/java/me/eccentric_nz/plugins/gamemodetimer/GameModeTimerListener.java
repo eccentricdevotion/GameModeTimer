@@ -13,7 +13,7 @@ import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class GameModeTimerListener implements Listener {
 
-    private GameModeTimer plugin;
+    private final GameModeTimer plugin;
 
     public GameModeTimerListener(GameModeTimer plugin) {
         this.plugin = plugin;

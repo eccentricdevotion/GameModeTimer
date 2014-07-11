@@ -7,7 +7,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 public class GameModeBlockListener implements Listener {
 
-    private GameModeTimer plugin;
+    private final GameModeTimer plugin;
 
     public GameModeBlockListener(GameModeTimer plugin) {
         this.plugin = plugin;
